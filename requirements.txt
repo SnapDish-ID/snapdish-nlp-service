@@ -3,4 +3,4 @@ flask-swagger
 python-dotenv
 numpy
 pandas
-
+tensorflow

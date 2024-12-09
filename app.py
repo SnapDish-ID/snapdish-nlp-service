@@ -1,4 +1,5 @@
 from flask import Flask, request, make_response
+import nlp
 
 app = Flask(__name__)
 app.json.sort_keys = False
@@ -21,26 +22,14 @@ def recipe():
     # TODO: handle request validation here
     # ...
 
-    # TODO: get ingredients from request body here
-    num = req.get("num")
+    main_ingred = req.get("main_ingredient")
+    ingred = req.get("ingredients")
 
-    # TODO: retrieve recipe recommendation here
-    data = [
-        {
-            "title": "TITLE_1",
-            "ingredients": "INGRED_1",
-            "steps": "STEPS_1" 
-        },
-        {
-            "title": "TITLE_2",
-            "ingredients": "INGRED_2",
-            "steps": "STEPS_2" 
-        }
-    ]
+    data = nlp.recipes_recommendation(main_ingred, ingred)
 
     res = {
         "status": "success",
-        "data": data[0:num] # dummy
+        "data": data
     }
     response = make_response(res)
     response.headers["Content-Type"] = "application/json"
