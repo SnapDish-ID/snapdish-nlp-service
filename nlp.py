@@ -12,12 +12,11 @@ def cosine_similarity(a, b):
     similarity = dot_product / (norm_a * norm_b)
     return similarity
 
-def recipes_recommendation(main_ingredients, ingredients):
+def recipes_recommendation(main_ingredients, ingredients_list):
     csv_file = "./dataset.csv"
     df = pd.read_csv(csv_file)
 
-    main_ingredients = "ayam"
-    ingredients = "bawang bombai, paprika, ayam, kentang, jahe, bawang putih"
+    ingredients = ", ".join(ingredients_list)
 
     category = df[df['Category'] == main_ingredients]
     dataset_ingredients = category["Ingredients Cleaned"].astype(str).tolist()
