@@ -39,8 +39,6 @@ def recipes_recommendation(main_ingredient, ingredients_list):
     
     results = category.sort_values('similarities',ascending=False).drop_duplicates(subset=['title'], keep='first').iloc[:3][["title", "category"]]
 
-    json_string = results.to_json(orient='records')
-    parsed_json = json.loads(json_string)
-    recipes = json.dumps(parsed_json)
+    recipes = results.to_dict(orient='records')
 
     return recipes
