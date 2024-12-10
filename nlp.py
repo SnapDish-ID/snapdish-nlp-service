@@ -12,14 +12,14 @@ def cosine_similarity(a, b):
     similarity = dot_product / (norm_a * norm_b)
     return similarity
 
-def recipes_recommendation(main_ingredients, ingredients_list):
+def recipes_recommendation(main_ingredient, ingredients_list):
     csv_file = "./dataset.csv"
     df = pd.read_csv(csv_file)
 
     ingredients = ", ".join(ingredients_list)
 
-    category = df[df['Category'] == main_ingredients]
-    dataset_ingredients = category["Ingredients Cleaned"].astype(str).tolist()
+    category = df[df['category'] == main_ingredient]
+    dataset_ingredients = category["ingredients_cleaned"].astype(str).tolist()
 
     max_vocab_size = 10000
     sequence_length = 50
@@ -37,7 +37,10 @@ def recipes_recommendation(main_ingredients, ingredients_list):
     similarity_scores = cosine_similarity(encoded_dataset, encoded_input).numpy()
     category['similarities'] = similarity_scores
     
-    results = category.sort_values('similarities',ascending=False).drop_duplicates(subset=['Title'], keep='first').iloc[:3][["Title", "Category"]]
-    json_data = results.to_json(orient='records')
+    results = category.sort_values('similarities',ascending=False).drop_duplicates(subset=['title'], keep='first').iloc[:3][["title", "category"]]
 
-    return json_data
+    json_string = results.to_json(orient='records')
+    parsed_json = json.loads(json_string)
+    recipes = json.dumps(parsed_json)
+
+    return recipes

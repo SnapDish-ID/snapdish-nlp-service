@@ -15,7 +15,7 @@
    ```
 
    ```powershell
-   .venv\Scripts\activate
+   .venv\Scripts\activate # for Windows
    ```
 
 4. Install dependencies
