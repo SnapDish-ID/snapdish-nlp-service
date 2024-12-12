@@ -4,18 +4,7 @@ import nlp
 app = Flask(__name__)
 app.json.sort_keys = False
 
-@app.route("/", methods=["GET"])
-def home():
-    res = {
-        "status": "success",
-        "message": "this is homepage"
-    }
-    response = make_response(res)
-    response.headers["Content-Type"] = "application/json"
-
-    return response
-
-@app.route("/recipes", methods=["POST"])
+@app.route("/recipes", methods=["GET"])
 def recipe():
     req = request.json
 
