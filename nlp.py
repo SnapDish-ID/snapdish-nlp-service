@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 import tensorflow as tf
-import json
 
 def cosine_similarity(a, b):
     a = tf.constant(a, dtype=tf.float32)
@@ -37,7 +36,7 @@ def recipes_recommendation(main_ingredient, ingredients_list):
     similarity_scores = cosine_similarity(encoded_dataset, encoded_input).numpy()
     category['similarities'] = similarity_scores
     
-    results = category.sort_values('similarities',ascending=False).drop_duplicates(subset=['title_cleaned'], keep='first').iloc[:3][["title_cleaned", "category"]]
+    results = category.sort_values('similarities',ascending=False).drop_duplicates(subset=['title'], keep='first').iloc[:3][["recipe_id","title", "category"]]
 
     recipes = results.to_dict(orient='records')
 
