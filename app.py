@@ -14,7 +14,7 @@ def home():
     response.headers["Content-Type"] = "application/json"
     return response
 
-@app.route("/recipes", methods=["GET"])
+@app.route("/recipes", methods=["POST"])
 def recipe():
     req = request.json
 
