@@ -1,5 +1,13 @@
 # snapdish-nlp-service
 
+SnapDish NLP Service provide recipes recommendation based on user input. This service receive main ingredient and list of ingredients from user and return top 3 recipes based on consine similarity score.
+
+## Pre-requisites
+
+- Python 3.9
+
+## Run locally
+
 1. Navigate to project root
 
 2. Create python virtual environment
