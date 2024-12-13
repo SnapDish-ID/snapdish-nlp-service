@@ -1,39 +1,60 @@
 from flask import Flask, request, make_response
-import nlp
+from pydantic import ValidationError
+
+from models import RecipesRequest
+from nlp import recipes_recommendation
 
 app = Flask(__name__)
 app.json.sort_keys = False
 
-@app.route("/", methods=["GET"])
-def home():
-    res = {
-        "status": "success",
-        "message": "this is homepage"
-    }
-    response = make_response(res)
-    response.headers["Content-Type"] = "application/json"
-    return response
-
 @app.route("/recipes", methods=["POST"])
 def recipe():
-    req = request.json
+    try:
+        req = RecipesRequest(**request.json)
+        main_ingred = req.main_ingredient
+        ingred = req.ingredients
 
-    # TODO: handle request validation here
-    # ...
+        data = recipes_recommendation(main_ingred, ingred)
 
-    main_ingred = req.get("main_ingredient")
-    ingred = req.get("ingredients")
+        res = {
+            "status": "success",
+            "data": data
+        }
+        response = make_response(res)
+        response.headers["Content-Type"] = "application/json"
+        response.status_code = 200
 
-    data = nlp.recipes_recommendation(main_ingred, ingred)
+        return response
 
-    res = {
-        "status": "success",
-        "data": data
-    }
-    response = make_response(res)
-    response.headers["Content-Type"] = "application/json"
+    except ValidationError as e:
+        errors = {}
+        for error in e.errors():
+            field = error["loc"][0]
+            message = error["msg"]
+            errors[field] = message
 
-    return response
+        res = {
+            "status": "failed",
+            "data": errors
+        }
+        response = make_response(res)
+        response.headers["Content-Type"] = "application/json"
+        response.status_code = 400
+
+        return response
+    
+    except:
+        res = {
+            "status": "failed",
+            "data": {
+                "error": "Invalid JSON format"
+            }
+        }
+        response = make_response(res)
+        response.headers["Content-Type"] = "application/json"
+        response.status_code = 400
+
+        return response
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
